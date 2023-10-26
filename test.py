@@ -1,6 +1,7 @@
 import requests
 import json
 import csv
+import pandas as pd
 
 # Define your Yelp API key
 api_key = 'B9cMCVgVcWrQll09BveLmLuOUknpQC85VM8W2jtwird__ZY96umj-s7O4tk8BcUA4NswMvLT5S04yUfK-B_lBhGOUA3qC8BoOx7r9tB7W7M20NIu3uzyfTaJ1JU4ZXYx'
@@ -20,30 +21,47 @@ headers = {
     'accept': 'application/json',
 }
 
-nyc = []
+nyc_raw = []
+location = 'Manhattan, NY'
+term = "Restaurants"
+limit = 50
+offset = 50 * 1
+categories = "(restaurants, All)"
+
+params = {
+    'term': term,
+    'location': location,
+    'limit': 50,
+    'offset': offset,
+    'categories': categories
+}
+
+response = requests.get(url, headers=headers, params=params)
+nyc_raw.append(response)
 #get 1000
-for y in range(20):
-    location = 'Manhattan, NY'
-    term = "Restaurants"
-    limit = 50
-    offset = 50 * y
+# for i in range(20):
+#     location = 'Manhattan, NY'
+#     term = "Restaurants"
+#     limit = 50
+#     offset = 50 * 1
+#
+#     params = {
+#         'term': term,
+#         'location': location,
+#         'limit': 50,
+#         'offset': offset
+#     }
+#
+#     response = requests.get(url, headers=headers, params=params)
+#     nyc_raw.append(response)
 
-    params = {
-        'term': term,
-        'location': location,
-        'limit': 50,
-        'offset': offset
-    }
-
-    response = requests.get(url, headers=headers, params=params)
-    nyc.append(response)
-
-with open('nyc_restaurants.csv', 'w', newline='') as csv_file:
-    writer = csv.writer(csv_file)
-    # Write the header
-    writer.writerow(['Business Name', 'Address', 'City', 'Zip Code'])
-    # Write the data from the 'nyc' list
-    writer.writerows(nyc)
+#create DataFrame
+df = pd.DataFrame()
+df = pd.DataFrame.from_dict(nyc_raw[0].json()['businesses'])
+# for i in range(20):
+#     section = pd.DataFrame.from_dict(nyc_raw[i].json()['businesses'])
+#     df = df.append(section)
+df.to_csv("nyc_restaurants.csv", index=False)
 
 
 
