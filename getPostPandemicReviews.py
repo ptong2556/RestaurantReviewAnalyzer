@@ -19,12 +19,58 @@ def getReviewsRange(startYear, endYear):
         with open("reviews_postPandemic.json", "w") as outfile:
             json.dump(everything, outfile)
 
-def asianFilter():
-    categories = set(['Japanese','Korean','Chinese','Sushi','Thai',"Vietnamese",
-                    "Indonesian", 'Thai', "Conveyor Belt Sushi", "Hot Pot",
-                    "Cantonese","Taiwanese", "Ramen", "Shanghainese","Dim Sum",
-                    "Izakaya", "Sushi Bars", "Hong Kong Style Cafe","Asian Fusion",
-                    "Teppanyaki", "Pan Asian", "Malaysian", "Bangladeshi","Bubble Tea",
-                    "Mongolian","Burmese","Cambodian","Japanese Curry","Oriental","Szechuan",
-                    "Laotian","Himalayan/Nepalese"])
+def asianInspiredBusinesses():
+    # categories restaurants have been labeled with
+    key_words = set(['Japanese','Korean','Chinese','Sushi','Thai',"Vietnamese",
+                     "Indonesian", 'Thai', "Conveyor Belt Sushi", "Hot Pot",
+                     "Cantonese","Taiwanese", "Ramen", "Shanghainese","Dim Sum",
+                     "Izakaya", "Sushi Bars", "Hong Kong Style Cafe","Asian Fusion",
+                     "Teppanyaki", "Pan Asian", "Malaysian", "Bangladeshi","Bubble Tea",
+                     "Mongolian","Burmese","Cambodian","Japanese Curry","Oriental","Szechuan",
+                     "Laotian","Himalayan/Nepalese"])
+
+    all_restaurants = []
+    with open('yelp_dataset/yelp_academic_dataset_business.json', 'r', encoding="utf8") as file:
+        for line in file:
+            biz = json.loads(line)
+            categories = biz['categories']
+
+            if categories:
+                categories = biz['categories'].split(",")
+
+                restaurant = False
+                bakeries = False
+                bars = False
+                coffee = False
+                tea = False
+                asian_inspired = False
+                for category in categories:
+                    category = category.strip()
+                    if category == 'Restaurants':
+                        restaurant = True
+                    if category == 'Bakeries':
+                        bakeries = True
+                    if category == 'Bars':
+                        bars = True
+                    if category == 'Coffee':
+                        coffee = True
+                    if category == 'Tea':
+                        tea = True
+                    if category in key_words:
+                        asian_inspired = True
+
+                if bakeries or bars or coffee or tea:
+                    continue
+
+                if restaurant and asian_inspired:
+                    all_restaurants.append(biz['business_id'])
+
+    return all_restaurants
+
+def main():
+    all_restaurants = asianInspiredBusinesses()
+    print(all_restaurants)
+
+if __name__ == "__main__":
+    main()
 
