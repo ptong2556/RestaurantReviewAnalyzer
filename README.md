@@ -1,5 +1,6 @@
 # RestaurantReviewAnalyzer
-COMS 4995: Empirical Methods of Data Science, Professor Michelle Levine \ 
+COMS 4995: Empirical Methods of Data Science, Professor Michelle Levine 
+
 This contains the code used to process existing data and perform natural language processing techniques on user reviews from popular restaurant rating platforms.
 
 CityDiversity: Analyzes how perceptions of ethnic restaurants differ in extremely diverse areas of the country
