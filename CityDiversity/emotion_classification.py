@@ -9,7 +9,7 @@ import json
 businesses = []
 reviews = []
 
-with open('CityDiversity/philadelphia_reviews.json', 'r') as file:
+with open('philadelphia_reviews.json', 'r') as file:
     for line in file:
         reviews = json.loads(line)
         break
